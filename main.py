@@ -1,0 +1,76 @@
+import discord, asyncio, sys, os
+from discord.app_commands.errors import AppCommandError, CommandInvokeError
+from discord.ext import commands
+from cfg import TOKEN, PRESENCE, VERSION, SYNCING, BOT_NAME
+from utils.logging import log
+from utils.embeds import error_template
+from pathlib import Path
+
+class Perihelion(commands.Bot):
+    coglist = []
+
+    async def setup_hook(self) -> None:
+        cogs_dir = Path('cogs')
+        priority_folders = sorted(
+            [d for d in cogs_dir.iterdir() if d.is_dir() and d.name.split("-", 1)[0].isdigit()],
+            key=lambda x: int(x.name.split("-", 1)[0])
+        )
+
+        for priority_folder in priority_folders:
+            log.debug(f"Loading cogs from priority folder: {priority_folder.name}")
+            cog_files = [f for f in priority_folder.glob('*.py') if f.is_file()]
+
+            for cog_file in cog_files:
+                cog_name = f"cogs.{priority_folder.name}.{cog_file.stem}"
+                log.debug(f"Loading extension {cog_name}")
+                try:
+                    await self.load_extension(cog_name)
+                    self.coglist.append(cog_name)
+                    log.debug(f"Extension {cog_name} loaded")
+                except Exception as e:
+                    log.error(f"Failed to load extension {cog_name}: {e}")
+
+            log.debug(f"Cogs: {self.coglist}")
+
+        if SYNCING['SHOULD_SYNC']:
+            log.info(f"Syncing commands to guild {SYNCING['SERVER']}")
+            await self.tree.sync(guild=self.get_guild(SYNCING['SERVER']))
+        else:
+            log.info("Not syncing commands.")
+
+
+
+intents = discord.Intents.default()
+
+bot = Perihelion(intents=intents, command_prefix="r!")  # Setting prefix
+
+@bot.tree.error
+async def on_app_command_error(interaction: discord.Interaction, error: AppCommandError):
+    command = interaction.command
+    if command is not None:
+        log.warning(f'Exception occured in command/contextmenu {command.name} by user {interaction.user.name}', exc_info=error)
+    else:
+        log.warning(f'Exception occured by user {interaction.user.name}', exc_info=error)
+
+    if isinstance(error, CommandInvokeError):
+        await interaction.response.send_message(embed=error_template(f"### {type(error.original).__name__}\n\n{error.original}"), ephemeral=True)
+        return
+    await interaction.response.send_message(embed=error_template(f"### {type(error).__name__}\n\n{error.args[0]}"), ephemeral=True)
+
+@bot.event
+async def on_ready():
+    log.info(f"{BOT_NAME} online.")
+    log.info(f"servers | {len(bot.guilds)}")
+    log.info(f"version | {VERSION}")
+    log.debug(f"Logged in as {bot.user}.")
+    await bot.change_presence(activity=discord.Game(name=PRESENCE))
+
+if __name__ == "__main__":
+    try:
+        bot.run(TOKEN)
+    except discord.LoginFailure:
+        log.critical("token invalid")
+        sys.exit()
+    except Exception as err:
+        log.critical(f"error: {err}")
+        sys.exit()

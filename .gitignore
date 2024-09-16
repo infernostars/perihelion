@@ -1,0 +1,3 @@
+data/*
+cfg/prod.py
+cfg/test.py
