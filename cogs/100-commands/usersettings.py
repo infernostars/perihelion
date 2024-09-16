@@ -58,8 +58,8 @@ class UserSettingsCog(commands.GroupCog, group_name="usersettings"):
 
         if settings["Global: Compact mode"]:
             await interaction.response.send_message(f"{setting_val} set to {value_typed}", ephemeral=True)
-            return
-        await interaction.response.send_message(embed=embed_template("Setting set successfully!", f"{setting_val} set to {value_typed}"), ephemeral=True)
+        else:
+            await interaction.response.send_message(embed=embed_template("Setting set successfully!", f"{setting_val} set to {value_typed}"), ephemeral=True)
 
     @app_commands.command(name="get")
     @app_commands.allowed_installs(guilds=True, users=True)
@@ -81,9 +81,8 @@ class UserSettingsCog(commands.GroupCog, group_name="usersettings"):
 
         if settings["Global: Compact mode"]:
             await interaction.response.send_message(f"{setting_val} is set to {setting_value}", ephemeral=True)
-            return
-
-        await interaction.response.send_message(embed=embed_template(f"{setting_val}'s value", f"{setting_value}"), ephemeral=True)
+        else:
+            await interaction.response.send_message(embed=embed_template(f"{setting_val}'s value", f"{setting_value}"), ephemeral=True)
 
 
 async def setup(client):

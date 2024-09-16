@@ -1,3 +1,4 @@
 data/*
 cfg/prod.py
 cfg/test.py
+__pycache__/
