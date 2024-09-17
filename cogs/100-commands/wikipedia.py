@@ -36,6 +36,8 @@ class WikipediaCog(commands.Cog):
 
         response = requests.get(url, headers=headers, params=params)
         data = response.json()
+        if not data['pages'][0]['key']:
+            await interaction.response.send_message(embed=error_template(f"No search results found for query `{query}`!"))
 
         url2 = f"https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=true&exlimit=1&titles={data['pages'][0]['key']}&explaintext=1&format=json&formatversion=2"
         response2 = requests.get(url2, headers=headers)

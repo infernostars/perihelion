@@ -2,3 +2,4 @@ data/*
 cfg/prod.py
 cfg/test.py
 __pycache__/
+environment_details.py
