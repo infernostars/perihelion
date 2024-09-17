@@ -1,0 +1,8 @@
+colorlog>=6.8.0
+beautifulsoup4>=4.12.0
+reactionmenu>=3.12.0
+pillow>=10.4.0
+requests>=2.32.0
+cexprtk>=0.4.0
+discord>=2.4.0
+rollplayerlib==0.5.4
