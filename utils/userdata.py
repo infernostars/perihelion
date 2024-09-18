@@ -55,35 +55,3 @@ def _save_user_settings(user_id: int, settings: Dict[str, Any]) -> None:
     file_path = f'data/users/{user_id}.json'
     with open(file_path, 'w') as f:
         json.dump(settings, f, indent=2)
-
-# Example usage:
-if __name__ == "__main__":
-    # Get all available settings
-    print("Available settings:", get_available_settings())
-
-    # Get a user's settings (creates new user if not exists)
-    print("Initial user settings:", get_user_settings(1))
-
-    # Change a user setting
-    change_user_setting(1, "compact_rolling", True)
-
-    # Get updated user settings
-    print("Updated user settings:", get_user_settings(1))
-
-    # Simulate adding a new field to AVAILABLE_SETTINGS
-    AVAILABLE_SETTINGS["foo"] = {"default": "bar", "type": str}
-
-    # Get user settings again, which should now include the new field
-    print("User settings after adding new field:", get_user_settings(1))
-
-    # Try to change an invalid setting
-    try:
-        change_user_setting(1, "invalid_setting", "value")
-    except ValueError as e:
-        print(f"Error: {e}")
-
-    # Try to change an invalid setting
-    try:
-        change_user_setting(1, "compact_rolling", "value")
-    except TypeError as e:
-        print(f"Error: {e}")
