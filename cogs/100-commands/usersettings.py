@@ -70,7 +70,7 @@ class UserSettingsCog(commands.GroupCog, group_name="usersettings"):
         Parameters
         ------------
         setting: app_commands.Choice[str]
-            The setting to set.
+            The setting to get.
         """
         setting_val = setting.value
         settings = get_settings_manager("user", interaction.user.id)
