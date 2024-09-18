@@ -1,5 +1,3 @@
-from typing import Union, List, Optional
-
 import discord
 from discord import User, Member, app_commands
 from discord.ext import commands
@@ -8,15 +6,15 @@ import random
 from math import floor
 from utils.userdata import get_settings_manager
 
-# This is what happens when the most retarded programmer in existence gets his hands on an actually good codebase!
+from typing import Union, List, Optional
 
-class RngSimCog(commands.Cog, name="games/rngsim"):
+class RngSimCog(commands.Cog):
     def __init__(self, client):
         self.client = client
 
     @commands.Cog.listener()
     async def on_ready(self):
-        log.info("Cog: the worst cog loaded")
+        log.info("Cog: rngsim loaded")
 
     @app_commands.command(name="rngsim")
     @app_commands.allowed_installs(guilds=True, users=True)
@@ -35,12 +33,11 @@ class RngSimCog(commands.Cog, name="games/rngsim"):
 
         old_highscore = settings["RngSim: Highscore"]
 
-        if numbr > settings["RngSim: Highscore"]:
-            settings.write_protected("RngSim: Highscore", numbr)
+        if numbr > old_highscore:
+            settings["RngSim: Highscore"] = numbr
             await interaction.response.send_message(f"## Your score is {numbr}.\n\n# [ NEW HIGHSCORE ]\n## Previous Highscore: {old_highscore}\n## New Highscore: {numbr}\n### Congratulations!")
         else:
             await interaction.response.send_message(f"## Your score is {numbr}.\n\n### Your current highscore is {old_highscore}.")
 
 async def setup(client):
     await client.add_cog(RngSimCog(client))
-

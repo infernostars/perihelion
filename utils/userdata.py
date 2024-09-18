@@ -7,6 +7,7 @@ USER_AVAILABLE_DATA: Dict[str, Dict[str, Union[Any, type]]] = {
     "Global: Compact mode": {"default": False, "type": bool, 'locked': False},
     "Rolling: Default roll": {"default": "1d100", "type": str, 'locked': False},
     "Define: English-only": {"default": False, "type": bool, 'locked': False},
+    "RngSim: Highscore": {"default": 0, "type": int, 'locked': true},
 }
 
 # Define available settings for guilds (currently empty)
@@ -75,7 +76,7 @@ class SettingsManager:
         self._data[key] = value
         self._save_data(self._data)
 
-    def get_available_data(self, user_definable_only: Optional[bool] = True) -> List[str]:
+    def get_available_data(self, unlocked: Optional[bool] = True) -> List[str]:
         return list(self.available_data.keys())
 
     def get_data_type(self, setting: str) -> type:
