@@ -7,7 +7,7 @@ USER_AVAILABLE_DATA: Dict[str, Dict[str, Union[Any, type]]] = {
     "Global: Compact mode": {"default": False, "type": bool, 'locked': False},
     "Rolling: Default roll": {"default": "1d100", "type": str, 'locked': False},
     "Define: English-only": {"default": False, "type": bool, 'locked': False},
-    "RngSim: Highscore": {"default": 0, "type": int, 'locked': True},
+    "RngSim: Highscore": {"default": 0, "type": float, 'locked': True},
 }
 
 # Define available settings for guilds (currently empty)
