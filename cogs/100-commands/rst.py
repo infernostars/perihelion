@@ -4,7 +4,7 @@ from discord.ext import commands
 from utils.logging import log
 from utils.embeds import *
 from typing import Optional
-from utils.userdata import get_user_settings
+from utils.userdata import get_settings_manager
 
 import random
 
@@ -56,7 +56,7 @@ class RstCog(commands.GroupCog, group_name="rst"):
             The text to add.
         """
         self.add_text(text)
-        settings = get_user_settings(interaction.user.id)
+        settings = get_settings_manager("user", interaction.user.id)
 
         if settings["Global: Compact mode"]:
             await interaction.response.send_message("Your text has been added to the database.")
@@ -70,7 +70,7 @@ class RstCog(commands.GroupCog, group_name="rst"):
         """
         Get a random quote.
         """
-        settings = get_user_settings(interaction.user.id)
+        settings = get_settings_manager("user", interaction.user.id)
         text = self.get_random_text()
         if settings["Global: Compact mode"]:
             await interaction.response.send_message(text)

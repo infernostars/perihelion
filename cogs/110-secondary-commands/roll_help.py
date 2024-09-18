@@ -4,7 +4,7 @@ from discord.ext import commands
 from utils.logging import log
 from utils.embeds import *
 from typing import Optional
-from utils.userdata import get_user_settings
+from utils.userdata import get_settings_manager
 
 
 from reactionmenu import ViewMenu, ViewButton
@@ -28,7 +28,9 @@ However, you may also specify the amount of dice being rolled, like `3d100`. Thi
 You can also roll multiple different sets of dice in the same command (like `2d10 3d20`). This is effectively the same as doing two seperate commands for each..
 
 Ranges are also supported, however this does not work without the `d` prefix [which also applies to the rest of this entire document].
-You can do something like `d10:100`. Both extremes are also included, so you could roll a 10 or 100."""))
+You can do something like `d10:100`. Both extremes are also included, so you could roll a 10 or 100.
+
+You can also use underscores, which will get completely removed before parsing (e.g. `1d10_000_000` = `1d10000000`). This is especially useful for large numbers."""))
 
         menu.add_page(embed_template("Modifiers", """You can also add modifiers! These allow you to add to rolls, multiply, etc. Note that modifiers add to all dice rolls, so `2d10+5` will add 10 total, 5 to each roll.
 

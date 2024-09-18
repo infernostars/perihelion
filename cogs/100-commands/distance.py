@@ -5,7 +5,7 @@ from discord.ext import commands
 from utils.logging import log
 from utils.embeds import *
 from typing import Optional
-from utils.userdata import get_user_settings
+from utils.userdata import get_settings_manager
 
 from PIL import Image, ImageDraw, ImageFont
 from utils.image import get_wrapped_text, crop_circle
@@ -63,7 +63,7 @@ class DistanceCog(commands.Cog):
         elif distance <= 1:
             comment = "Perihelion."
         elif distance < 10**6.5:
-            comment = choice([f"You're in the corona, in the millions of degrees. {choice(["Ought to get an ice pack.", 
+            comment = choice([f"You're in the corona, in the millions of degrees. {choice(["Ought to get an ice pack.",
                                                                                            "Might want to bring a fan.",
                                                                                            "You should really get some refreshments."])}",
                               "This is a really good view of the Sun. Too bright though, 1 star."])

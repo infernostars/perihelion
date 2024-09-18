@@ -4,7 +4,7 @@ from discord.ext import commands
 from utils.logging import log
 from utils.embeds import *
 from typing import Optional
-from utils.userdata import get_user_settings
+from utils.userdata import get_settings_manager
 
 from rollplayerlib import Format, UnifiedDice, SolveMode, RollException, FormatType
 from utils.rolling.coloring import *
@@ -31,11 +31,13 @@ class RollCog(commands.Cog):
             The rolls to roll, separated by spaces. For example: "1d100 2d20 1d6".
         """
 
-        settings = get_user_settings(interaction.user.id)
+        settings = get_settings_manager("user", interaction.user.id)
 
         if not rolls:
             rolls = settings["Rolling: Default roll"]
             assert type(rolls) is str
+
+        rolls.replace("_", "")
 
         # Split the input string into individual roll expressions
         roll_expressions = rolls.split()

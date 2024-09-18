@@ -4,7 +4,7 @@ from discord.ext import commands
 from utils.logging import log
 from utils.embeds import *
 from typing import Optional
-from utils.userdata import get_user_settings
+from utils.userdata import get_settings_manager
 
 from PIL import Image
 from utils.image import crop_circle

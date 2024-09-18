@@ -4,7 +4,7 @@ from discord.ext import commands
 from utils.logging import log
 from utils.embeds import *
 from typing import Optional
-from utils.userdata import get_user_settings
+from utils.userdata import get_settings_manager
 
 import random
 
@@ -34,7 +34,7 @@ class ChooseCog(commands.Cog):
             If false, options can be picked multiple times.
 
         """
-        settings = get_user_settings(interaction.user.id)
+        settings = get_settings_manager("user", interaction.user.id)
 
         if count is None:
             count = 1

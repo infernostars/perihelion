@@ -5,7 +5,7 @@ from discord.ext import commands
 from utils.logging import log
 from utils.embeds import *
 from typing import Optional
-from utils.userdata import get_user_settings
+from utils.userdata import get_settings_manager
 
 from PIL import Image, ImageDraw, ImageFont
 from utils.image import get_wrapped_text, crop_circle
@@ -27,7 +27,7 @@ class ImageCog(commands.Cog):
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     @app_commands.choices(typ = [app_commands.Choice(name="Default",value="default")])
     @app_commands.rename(typ = "type")
-    async def caption(self, interaction: discord.Interaction, caption: str, image: discord.Attachment, typ: app_commands.Choice[str] = "default"):
+    async def caption(self, interaction: discord.Interaction, caption: str, image: discord.Attachment, typ: app_commands.Choice[str] = "default"): #pyright: ignore[reportArgumentType] per this being expanded later
         if hasattr(image, "height"):
             img = await image.read()
             img = Image.open(BytesIO(img))

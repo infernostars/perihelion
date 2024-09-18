@@ -4,7 +4,7 @@ from discord.ext import commands
 from utils.logging import log
 from utils.embeds import *
 from typing import Optional
-from utils.userdata import get_user_settings
+from utils.userdata import get_settings_manager
 
 
 class DefineCog(commands.Cog):
@@ -23,7 +23,7 @@ class DefineCog(commands.Cog):
         """
         Define a word. Uses Wiktionary on the backend.
         """
-        settings = get_user_settings(interaction.user.id)
+        settings = get_settings_manager("user", interaction.user.id)
 
         data = self.language.define(word)
         if settings["Define: English-only"]:

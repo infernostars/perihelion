@@ -1,15 +1,16 @@
+from typing import Any
 import discord, asyncio, sys, os, traceback
 from discord.abc import PrivateChannel
 from discord.app_commands.errors import AppCommandError, CommandInvokeError
 from discord.ext import commands
-from cfg import TOKEN, PRESENCE, VERSION, SYNCING, BOT_NAME, ERROR_LOGGING_CHANNEL
+from cfg import TOKEN, PRESENCE, VERSION, SYNCING, BOT_NAME, ERROR_LOGGING_CHANNEL, DONT_LOAD_COGS
 from utils.logging import log
 from utils.embeds import error_template, embed_template
 from pathlib import Path
 
 class Perihelion(commands.Bot):
     coglist = []
-    error_channel = None
+    error_channel: Any = None
 
     async def setup_hook(self) -> None:
         cogs_dir = Path('cogs')
@@ -24,6 +25,9 @@ class Perihelion(commands.Bot):
 
             for cog_file in cog_files:
                 cog_name = f"cogs.{priority_folder.name}.{cog_file.stem}"
+                if cog_name in DONT_LOAD_COGS:
+                    log.debug(f"NOT loading extension {cog_name}")
+                    continue
                 log.debug(f"Loading extension {cog_name}")
                 try:
                     await self.load_extension(cog_name)
@@ -48,7 +52,8 @@ bot = Perihelion(intents=intents, command_prefix="r!")  # Setting prefix
 
 @bot.tree.error
 async def on_app_command_error(interaction: discord.Interaction, error: AppCommandError):
-    error_channel = bot.get_channel(ERROR_LOGGING_CHANNEL) #pyright: ignore[reportAssignmentType]
+    if not bot.error_channel:
+        bot.error_channel = bot.get_channel(ERROR_LOGGING_CHANNEL)
     command = interaction.command
     if command is not None:
         log.warning(f'Exception occured in command/contextmenu {command.name} by user {interaction.user.name}', exc_info=error)
@@ -57,10 +62,10 @@ async def on_app_command_error(interaction: discord.Interaction, error: AppComma
 
     if isinstance(error, CommandInvokeError):
         await interaction.response.send_message(embed=error_template(f"### {type(error.original).__name__}\n\n{error.original}"), ephemeral=True)
-        await error_channel.send(f"## Exception occured in command/contextmenu {command.name if command else "non-command"} by user {interaction.user.name}\n\n ### {type(error.original).__name__}\n\n```{"".join(traceback.format_exception(error.original)).replace("\\n", "\n")}```") #pyright: ignore[reportCallIssue, reportOptionalMemberAccess, reportAttributeAccessIssue]
+        await bot.error_channel.send(f"## Exception occured in command/contextmenu {command.name if command else "non-command"} by user {interaction.user.name}\n\n ### {type(error.original).__name__}\n\n```{"".join(traceback.format_exception(error.original)).replace("\\n", "\n")}```") #pyright: ignore[reportCallIssue, reportOptionalMemberAccess, reportAttributeAccessIssue]
         return
     await interaction.response.send_message(embed=error_template(f"### {type(error).__name__}\n\n{error.args[0]}"), ephemeral=True)
-    await error_channel.send(f"## Exception occured in command/contextmenu {command.name if command else "non-command"} by user {interaction.user.name}\n\n ### {type(error).__name__}\n\n```{"".join(traceback.format_exception(error)).replace("\\n", "\n")}```") #pyright: ignore[reportCallIssue, reportOptionalMemberAccess, reportAttributeAccessIssue]
+    await bot.error_channel.send(f"## Exception occured in command/contextmenu {command.name if command else "non-command"} by user {interaction.user.name}\n\n ### {type(error).__name__}\n\n```{"".join(traceback.format_exception(error)).replace("\\n", "\n")}```") #pyright: ignore[reportCallIssue, reportOptionalMemberAccess, reportAttributeAccessIssue]
 
 
 @bot.event
@@ -68,6 +73,7 @@ async def on_ready():
     log.info(f"{BOT_NAME} online.")
     log.info(f"servers | {len(bot.guilds)}")
     log.info(f"version | {VERSION}")
+    log.info(f"cogs    | {len(bot.coglist)} (and {len(DONT_LOAD_COGS)} in blacklist)")
     log.debug(f"Logged in as {bot.user}.")
     await bot.change_presence(activity=discord.Game(name=PRESENCE))
 
