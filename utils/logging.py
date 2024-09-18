@@ -19,5 +19,5 @@ log = colorlogger()
 if LOGGING["LEVEL"] in ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]:
     log.setLevel(LOGGING["LEVEL"])
 else:
-    log.setLevel("INFO")
-    log.warning(f"Invalid log level `{LOGGING["LEVEL"]}`. Defaulting to INFO.")
+    log.setLevel("DEBUG")
+    log.warning(f"Invalid log level `{LOGGING["LEVEL"]}`. Defaulting to DEBUG.")

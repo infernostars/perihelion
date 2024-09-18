@@ -32,6 +32,7 @@ def error_template(description: str) -> discord.Embed:
     return _error_template.copy()
 
 async def viewmenu_paginate_entries(self, ctx, entries, title="List", amount=20):
+    """Creates a paginated viewer of entries. Also automatically handles display."""
     menu = ViewMenu(ctx, menu_type=ViewMenu.TypeEmbed)
     for i in range(0, len(entries), amount):
         group = entries[i:i + amount]

@@ -12,6 +12,7 @@ def get_wrapped_text(text: str, font: ImageFont.ImageFont | ImageFont.FreeTypeFo
     return '\n'.join(lines)
 
 def crop_circle(img: Image.Image):
+    """Crops an Image to a circle."""
     h, w = img.size
     mask = Image.new('L', (w, h), 0)
     draw = ImageDraw.Draw(mask)

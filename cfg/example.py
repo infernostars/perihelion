@@ -2,18 +2,18 @@ import datetime
 
 TOKEN = "Token here"
 
-BOT_NAME = "Apohelion"
+BOT_NAME = "Apohelion" # This shows up in /info.
 
-VERSION = f"9.9.9.99+buildtime_{int(datetime.datetime.now().timestamp())}"
+VERSION = f"9.9.9.99+buildtime_{int(datetime.datetime.now().timestamp())}" # This shows up in /info.
 
-PRESENCE = "farther than pluto"
+PRESENCE = "farther than pluto" # This shows up in the "Playing ..." area
 
-LOGGING = {"LEVEL": "DEBUG"}
+LOGGING = {"LEVEL": "DEBUG"} # This should be one of DEBUG, INFO, WARNING, ERROR, CRITICAL
 
-SYNCING = {"SHOULD_SYNC": False, "SERVER": 1234567890}
+SYNCING = {"SHOULD_SYNC": False, "SERVER": 1234567890} # Decides if we should sync commands. Set server to 0 for global sync.
 
-EMBED = {"COLOR": 0xff8a8c, "FOOTER": f"Perihelion testing | v{VERSION}"}
+EMBED = {"COLOR": 0xff8a8c, "FOOTER": f"Perihelion testing | v{VERSION}"} # This is for the embed templates.
 
-ERROR_LOGGING_CHANNEL = 1234567890123456789
+ERROR_LOGGING_CHANNEL = 1234567890123456789 # Errors will get logged to this channel.
 
-DONT_LOAD_COGS = ["cogs.100-commands.test"]
+DONT_LOAD_COGS = ["cogs.100-commands.test"] # This only works for cogs (so those in the cogs folder)

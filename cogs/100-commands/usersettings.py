@@ -7,7 +7,7 @@ from typing import Optional
 from utils.userdata import get_settings_manager
 
 def _get_choices_from_list_settings():
-    return [app_commands.Choice(name=x,value=x) for x in get_settings_manager("user", 0).get_available_data()]
+    return [app_commands.Choice(name=x,value=x) for x in get_settings_manager("user", 0).get_available_data_keys(bypass_locked=False)]
 
 @app_commands.allowed_installs(guilds=True, users=True)
 @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)

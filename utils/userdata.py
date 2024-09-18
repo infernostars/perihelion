@@ -1,13 +1,13 @@
 import os
 import json
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Literal, Optional, Union
 
 # Define available settings for users
 USER_AVAILABLE_DATA: Dict[str, Dict[str, Union[Any, type]]] = {
     "Global: Compact mode": {"default": False, "type": bool, 'locked': False},
     "Rolling: Default roll": {"default": "1d100", "type": str, 'locked': False},
     "Define: English-only": {"default": False, "type": bool, 'locked': False},
-    "RngSim: Highscore": {"default": 0, "type": int, 'locked': true},
+    "RngSim: Highscore": {"default": 0, "type": int, 'locked': True},
 }
 
 # Define available settings for guilds (currently empty)
@@ -15,6 +15,11 @@ GUILD_AVAILABLE_DATA: Dict[str, Dict[str, Union[Any, type]]] = {
 }
 
 class SettingsManager:
+    """
+    Handles settings like a dictionary. You cannot write new keys, but setting pre-existing keys and getting them works.
+
+    For writes that are mostly done by the user, use `write_protected()` to protect non-setting data values.
+    """
     def __init__(self, entity_type: str, entity_id: Union[int, str], available_data: Dict[str, Dict[str, Union[Any, type]]]):
         self.entity_type = entity_type
         self.entity_id = entity_id
@@ -76,15 +81,27 @@ class SettingsManager:
         self._data[key] = value
         self._save_data(self._data)
 
-    def get_available_data(self, unlocked: Optional[bool] = True) -> List[str]:
-        return list(self.available_data.keys())
+    def get_available_data_keys(self, bypass_locked: bool = True) -> List[str]:
+        """Gets all keys of the database.
+
+        Parameters
+        ------------
+        bypass_locked: `bool`
+
+        If false, only shows unlocked keys."""
+        if bypass_locked:
+            return list(self.available_data.keys())
+        else:
+            return [key for key, value in self.available_data.items() if not value.get('locked', False)]
 
     def get_data_type(self, setting: str) -> type:
+        """Gets the type of a setting by string name."""
         if setting not in self.available_data:
             raise KeyError(f"Invalid setting: {setting}")
         return self.available_data[setting]["type"]
 
     def get_data(self) -> Dict[str, Any]:
+        """Gets a direct copy of the dictionary."""
         return self._data.copy()
 
 class UserSettingsManager(SettingsManager):
@@ -95,7 +112,8 @@ class GuildSettingsManager(SettingsManager):
     def __init__(self, guild_id: int):
         super().__init__("guild", guild_id, GUILD_AVAILABLE_DATA)
 
-def get_settings_manager(entity_type: str, entity_id: int) -> SettingsManager:
+def get_settings_manager(entity_type: Literal["user", "guild"], entity_id: int) -> SettingsManager:
+    """Returns a SettingsManager based on entity type and entity id."""
     if entity_type == "user":
         return UserSettingsManager(entity_id)
     elif entity_type == "guild":
