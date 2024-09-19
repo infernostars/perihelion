@@ -26,7 +26,7 @@ class RngSimCog(commands.Cog):
         multi = 1/random.random()
         count = 0
         numbr = 0
-        while count != repet:
+        while count < repet:
             numbr += random.randint(0, denom)
             count+=1
         numbr*=multi
@@ -35,9 +35,9 @@ class RngSimCog(commands.Cog):
 
         if numbr > old_highscore:
             settings["RngSim: Highscore"] = numbr
-            await interaction.response.send_message(f"## Your score is {numbr}.\n\n# [ NEW HIGHSCORE ]\n## Previous Highscore: {old_highscore}\n## New Highscore: {numbr}\n### Congratulations!")
+            await interaction.response.send_message(f"## [ NEW HIGHSCORE ({old_highscore:2f} > {numbr:2f}) ]\n\nYour score is **{numbr:2f}**.\n\nCongratulations!")
         else:
-            await interaction.response.send_message(f"## Your score is {numbr}.\n\n### Your current highscore is {old_highscore}.")
+            await interaction.response.send_message(f"Your score is **{numbr:2f}**.\n\n-# Your current highscore is {old_highscore:2f}.", ephemeral=True)
 
 async def setup(client):
     await client.add_cog(RngSimCog(client))
