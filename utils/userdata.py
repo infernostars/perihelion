@@ -112,11 +112,17 @@ class GuildSettingsManager(SettingsManager):
     def __init__(self, guild_id: int):
         super().__init__("guild", guild_id, GUILD_AVAILABLE_DATA)
 
-def get_settings_manager(entity_type: Literal["user", "guild"], entity_id: int) -> SettingsManager:
+class GlobalSettingsManager(SettingsManager):
+    def __init__(self):
+        super().__init__("global", 0, GUILD_AVAILABLE_DATA)
+
+def get_settings_manager(entity_type: Literal["user", "guild", "global"], entity_id: int) -> SettingsManager:
     """Returns a SettingsManager based on entity type and entity id."""
     if entity_type == "user":
         return UserSettingsManager(entity_id)
     elif entity_type == "guild":
         return GuildSettingsManager(entity_id)
+    elif entity_type == "global":
+        return GlobalSettingsManager()
     else:
         raise ValueError(f"Invalid entity type: {entity_type}")

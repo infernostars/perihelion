@@ -6,6 +6,6 @@ Perihelion is a general purpose Discord bot, containing whatever you'd want!
 
 create a `cfg/prod.py` and/or `cfg/test.py` \[example in `cfg/example.py`]
 
-create the following empty directories: `data`, `data/guilds`, `data/wikis`, `data/users`
+create the following empty directories: `data`, `data/guilds`, `data/wikis`, `data/users`, `data/global`
 
 rename `environment_details_example_rename.py` to `environment_details.py`
