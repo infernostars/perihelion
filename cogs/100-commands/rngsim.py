@@ -19,7 +19,7 @@ class RngSimCog(commands.Cog):
     @app_commands.command(name="rngsim")
     @app_commands.allowed_installs(guilds=True, users=True)
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
-    async def rngsim(self, interaction: discord.Interaction, query: Optional[str]):
+    async def rngsim(self, interaction: discord.Interaction):
         settings = get_settings_manager("user", interaction.user.id)
         denom = floor(1/random.random())
         repet = floor(1/random.random())
@@ -35,9 +35,9 @@ class RngSimCog(commands.Cog):
 
         if numbr > old_highscore:
             settings["RngSim: Highscore"] = numbr
-            await interaction.response.send_message(f"## [ NEW HIGHSCORE ({old_highscore:2f} > {numbr:2f}) ]\n\nYour score is **{numbr:2f}**.\n\nCongratulations!")
+            await interaction.response.send_message(f"## [ NEW HIGHSCORE ({old_highscore:.2f} > {numbr:.2f}) ]\n\nYour score is **{numbr:.2f}**, congratulations!")
         else:
-            await interaction.response.send_message(f"Your score is **{numbr:2f}**.\n\n-# Your current highscore is {old_highscore:2f}.", ephemeral=True)
+            await interaction.response.send_message(f"Your score is **{numbr:.2f}**.\n-# Your current highscore is {old_highscore:.2f}.", ephemeral=True)
 
 async def setup(client):
     await client.add_cog(RngSimCog(client))
