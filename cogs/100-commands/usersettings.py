@@ -4,10 +4,11 @@ from discord.ext import commands
 from utils.logging import log
 from utils.embeds import *
 from typing import Optional
-from utils.userdata import get_settings_manager
+from utils.userdata import get_data_manager
+from discord.app_commands import locale_str
 
 def _get_choices_from_list_settings():
-    return [app_commands.Choice(name=x,value=x) for x in get_settings_manager("user", 0).get_available_data_keys(bypass_locked=False)]
+    return [app_commands.Choice(name=x,value=x) for x in get_data_manager("user", 0).get_available_data_keys(bypass_locked=False)]
 
 @app_commands.allowed_installs(guilds=True, users=True)
 @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
@@ -35,7 +36,7 @@ class UserSettingsCog(commands.GroupCog, group_name="usersettings"):
         value: str
             The setting's new value.
         """
-        settings = get_settings_manager("user", interaction.user.id)
+        settings = get_data_manager("user", interaction.user.id)
 
         setting_val = setting.value
         setting_type = settings.get_data_type(setting_val)
@@ -52,7 +53,7 @@ class UserSettingsCog(commands.GroupCog, group_name="usersettings"):
         else:
             await interaction.response.send_message(embed=error_template("The option can't find the correct typing. Please report this bug."))
             return
-        settings.write_protected(setting_val, value_typed)
+        settings.write_unprivileged(setting_val, value_typed)
 
         if settings["Global: Compact mode"]:
             await interaction.response.send_message(f"{setting_val} set to {value_typed}", ephemeral=True)
@@ -73,7 +74,7 @@ class UserSettingsCog(commands.GroupCog, group_name="usersettings"):
             The setting to get.
         """
         setting_val = setting.value
-        settings = get_settings_manager("user", interaction.user.id)
+        settings = get_data_manager("user", interaction.user.id)
 
         setting_value = settings[setting_val]
 

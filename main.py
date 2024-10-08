@@ -7,12 +7,14 @@ from cfg import TOKEN, PRESENCE, VERSION, SYNCING, BOT_NAME, ERROR_LOGGING_CHANN
 from utils.logging import log
 from utils.embeds import error_template, embed_template
 from pathlib import Path
+from utils.translation import JSONTranslator
 
 class Perihelion(commands.Bot):
     coglist = []
     error_channel: Any = None
 
     async def setup_hook(self) -> None:
+        await bot.tree.set_translator(JSONTranslator())
         cogs_dir = Path('cogs')
         priority_folders = sorted(
             [d for d in cogs_dir.iterdir() if d.is_dir() and d.name.split("-", 1)[0].isdigit()],

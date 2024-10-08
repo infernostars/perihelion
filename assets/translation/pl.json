@@ -1,0 +1,6 @@
+{
+  "command_roll": "roll",
+  "command_roll_desc": "Rolls one or more dice.",
+  "command_roll_rolls": "rolls",
+  "command_roll_rolls_desc": "The roll string to roll."
+}

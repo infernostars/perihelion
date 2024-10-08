@@ -4,7 +4,8 @@ from discord.ext import commands
 from utils.logging import log
 from utils.embeds import *
 from typing import Optional
-from utils.userdata import get_settings_manager
+from utils.userdata import get_data_manager
+from discord.app_commands import locale_str
 
 from assets.eightball_responses import responses
 
@@ -25,7 +26,7 @@ class EightBallCog(commands.Cog):
         """
         Query Tyche(lion) for the answers to all your questions. As long as they have a yes/maybe/no answer.
         """
-        settings = get_settings_manager("user", interaction.user.id)
+        settings = get_data_manager("user", interaction.user.id)
 
         response = random.choice(responses)
 

@@ -4,7 +4,7 @@ from discord.ext import commands
 from utils.logging import log
 import random
 from math import floor
-from utils.userdata import get_settings_manager
+from utils.userdata import get_data_manager
 
 from typing import Union, List, Optional
 
@@ -20,7 +20,8 @@ class RngSimCog(commands.Cog):
     @app_commands.allowed_installs(guilds=True, users=True)
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def rngsim(self, interaction: discord.Interaction):
-        settings = get_settings_manager("user", interaction.user.id)
+        settings = get_data_manager("user", interaction.user.id)
+        old_highscore = settings["RngSim: Highscore"]
         denom = floor(1/random.random())
         repet = floor(1/random.random())
         multi = 1/random.random()
@@ -30,8 +31,6 @@ class RngSimCog(commands.Cog):
             numbr += random.randint(0, denom)
             count+=1
         numbr*=multi
-
-        old_highscore = settings["RngSim: Highscore"]
 
         if numbr > old_highscore:
             settings["RngSim: Highscore"] = numbr

@@ -4,7 +4,8 @@ from discord.ext import commands
 from utils.logging import log
 from utils.embeds import *
 from typing import Optional
-from utils.userdata import get_settings_manager
+from utils.userdata import get_data_manager
+from discord.app_commands import locale_str
 
 from rollplayerlib import Format, UnifiedDice, SolveMode, RollException, FormatType
 from utils.rolling.coloring import *
@@ -18,20 +19,13 @@ class RollCog(commands.Cog):
     async def on_ready(self):
         log.info("Cog: rolling loaded")
 
-    @app_commands.command(name="roll", description="Rolls dice.")
+    @app_commands.command(name="roll", description="Rolls some dice.")
+    @app_commands.describe(rolls="A list of rolls.")
     @app_commands.allowed_installs(guilds=True, users=True)
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def roll(self, interaction: discord.Interaction, rolls: Optional[str]):
-        """
-        Rolls one or more dice.
 
-        Parameters
-        ------------
-        rolls: str
-            The rolls to roll, separated by spaces. For example: "1d100 2d20 1d6".
-        """
-
-        settings = get_settings_manager("user", interaction.user.id)
+        settings = get_data_manager("user", interaction.user.id)
 
         if not rolls:
             rolls = settings["Rolling: Default roll"]

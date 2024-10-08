@@ -6,3 +6,4 @@ requests>=2.32.0
 cexprtk>=0.4.0
 discord>=2.4.0
 rollplayerlib==0.5.4
+peridata>=1.0.0

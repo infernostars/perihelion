@@ -4,12 +4,13 @@ from discord.ext import commands
 from utils.logging import log
 from utils.embeds import *
 from typing import Optional
-from utils.userdata import get_settings_manager
+from utils.userdata import get_data_manager
+from discord.app_commands import locale_str
 
 from utils.checks import developer_only
 
 def _get_choices_from_list_settings():
-    return [app_commands.Choice(name=x,value=x) for x in get_settings_manager("user", 0).get_available_data_keys(bypass_locked=True)]
+    return [app_commands.Choice(name=x,value=x) for x in get_data_manager("user", 0).get_available_data_keys(bypass_locked=True)]
 
 class DeveloperCommandsCog(commands.GroupCog, group_name="dev"):
     def __init__(self, client):
@@ -25,7 +26,7 @@ class DeveloperCommandsCog(commands.GroupCog, group_name="dev"):
     @app_commands.choices(setting=_get_choices_from_list_settings())
     @developer_only()
     async def set_usersettings(self, interaction: discord.Interaction, userid: str, setting: app_commands.Choice[str], value: str):
-        settings = get_settings_manager("user", int(userid))
+        settings = get_data_manager("user", int(userid))
 
         setting_val = setting.value
         setting_type = settings.get_data_type(setting_val)
@@ -55,10 +56,10 @@ class DeveloperCommandsCog(commands.GroupCog, group_name="dev"):
     @app_commands.choices(setting=_get_choices_from_list_settings())
     @developer_only()
     async def get_usersettings(self, interaction: discord.Interaction, userid: str, setting: app_commands.Choice[str]):
-        settings = get_settings_manager("user", int(userid))
+        settings = get_data_manager("user", int(userid))
 
         setting_val = setting.value
-        settings = get_settings_manager("user", interaction.user.id)
+        settings = get_data_manager("user", interaction.user.id)
 
         setting_value = settings[setting_val]
 
@@ -69,7 +70,7 @@ class DeveloperCommandsCog(commands.GroupCog, group_name="dev"):
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     @developer_only()
     async def get_allusersettings(self, interaction: discord.Interaction, userid: str):
-        settings = get_settings_manager("user", int(userid))
+        settings = get_data_manager("user", int(userid))
 
         await interaction.response.send_message(f"`{userid}`'s settings:\n\n{settings.get_data()}", ephemeral=True)
 

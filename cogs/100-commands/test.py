@@ -4,7 +4,8 @@ from discord.ext import commands
 from utils.logging import log
 from utils.embeds import *
 from typing import Optional
-from utils.userdata import get_settings_manager
+from utils.userdata import get_data_manager
+from discord.app_commands import locale_str
 
 class TestingCog(commands.Cog):
     def __init__(self, client):
@@ -24,7 +25,7 @@ class TestingCog(commands.Cog):
     @app_commands.allowed_installs(guilds=True, users=True)
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def test_usersettings(self, interaction: discord.Interaction):
-        await interaction.response.send_message(get_settings_manager("user", interaction.user.id), ephemeral=True)
+        await interaction.response.send_message(get_data_manager("user", interaction.user.id), ephemeral=True)
 
     @app_commands.command(name="test_err", description="A testing command, for errors.")
     @app_commands.allowed_installs(guilds=True, users=True)
